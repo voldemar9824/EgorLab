@@ -12,11 +12,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Sinks.File;
+using System.Reflection;
+
 
 namespace EgorLab
 {
+    
     public class Startup
     {
+          
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,9 +33,12 @@ namespace EgorLab
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+             {
+           services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+ 
+           ConfigureLogger();
+       } 
             services.AddSingleton<IStorage<Person>, MemStorage>();
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             switch (Configuration["Storage:Type"].ToStorageEnum())
             {
@@ -43,7 +52,18 @@ namespace EgorLab
                 default:
                     throw new IndexOutOfRangeException($"Storage type '{Configuration["Storage:Type"]}' is unknown");
             }
+            
         }
+            
+private void ConfigureLogger()
+       {
+           var log = new LoggerConfiguration()
+               .WriteTo.Console()
+               .WriteTo.File("logs\\egorLab.log", rollingInterval: RollingInterval.Day)
+               .CreateLogger();
+ 
+           Log.Logger = log;
+       }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
