@@ -54,6 +54,8 @@ namespace EgorLab.Models.StorageModels
                 people.Remove(person);
             }
         }       
+        public string StorageType => $"{nameof(MemStorage)}";
+        
     }
 }
 

@@ -36,11 +36,11 @@ namespace EgorLab.Models.StorageModels
 
                     if (deserialized != null)
                     {
-                        foreach (var labData in deserialized)
+                        foreach (var Person in deserialized)
                         {
                             try
                             {
-                                base[labData.Id] = labData;
+                                base[Person.Id] = Person;
                             }
                             catch { }
                         }
@@ -52,7 +52,7 @@ namespace EgorLab.Models.StorageModels
                 }
             }
         }
-
+public string StorageType => $"{nameof(FileStorage)}";
         private void Flush()
         {
             var serializedContents = JsonConvert.SerializeObject(All);

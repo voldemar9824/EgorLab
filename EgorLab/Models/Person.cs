@@ -7,7 +7,7 @@ namespace EgorLab.Models
 {
     public class Person
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.Empty;
         public string Name { get; set; }
         public string SurName{ get; set; }
         public int Age { get; set; }
